@@ -6,11 +6,11 @@
  * A class definition that includes attributes and functions used across both the
  * public-facing side of the site and the admin area.
  *
- * @link       http://example.com
+ * @link       http://simon-ring.se/popp
  * @since      1.0.0
  *
- * @package    Plugin_Name
- * @subpackage Plugin_Name/includes
+ * @package    Popp
+ * @subpackage Popp/includes
  */
 
 /**
@@ -23,11 +23,11 @@
  * version of the plugin.
  *
  * @since      1.0.0
- * @package    Plugin_Name
- * @subpackage Plugin_Name/includes
- * @author     Your Name <email@example.com>
+ * @package    Popp
+ * @subpackage Popp/includes
+ * @author     Simon Ring <hej@simon-ring.se>
  */
-class Plugin_Name {
+class Popp {
 
 	/**
 	 * The loader that's responsible for maintaining and registering all hooks that power
@@ -35,7 +35,7 @@ class Plugin_Name {
 	 *
 	 * @since    1.0.0
 	 * @access   protected
-	 * @var      Plugin_Name_Loader    $loader    Maintains and registers all hooks for the plugin.
+	 * @var      Popp_Loader    $loader    Maintains and registers all hooks for the plugin.
 	 */
 	protected $loader;
 
@@ -68,7 +68,7 @@ class Plugin_Name {
 	 */
 	public function __construct() {
 
-		$this->plugin_name = 'plugin-name';
+		$this->plugin_name = 'popp';
 		$this->version = '1.0.0';
 
 		$this->load_dependencies();
@@ -83,10 +83,10 @@ class Plugin_Name {
 	 *
 	 * Include the following files that make up the plugin:
 	 *
-	 * - Plugin_Name_Loader. Orchestrates the hooks of the plugin.
-	 * - Plugin_Name_i18n. Defines internationalization functionality.
-	 * - Plugin_Name_Admin. Defines all hooks for the admin area.
-	 * - Plugin_Name_Public. Defines all hooks for the public side of the site.
+	 * - Popp_Loader. Orchestrates the hooks of the plugin.
+	 * - Popp_i18n. Defines internationalization functionality.
+	 * - Popp_Admin. Defines all hooks for the admin area.
+	 * - Popp_Public. Defines all hooks for the public side of the site.
 	 *
 	 * Create an instance of the loader which will be used to register the hooks
 	 * with WordPress.
@@ -100,33 +100,33 @@ class Plugin_Name {
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-plugin-name-loader.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-popp-loader.php';
 
 		/**
 		 * The class responsible for defining internationalization functionality
 		 * of the plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-plugin-name-i18n.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-popp-i18n.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-plugin-name-admin.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-popp-admin.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the public-facing
 		 * side of the site.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-plugin-name-public.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-popp-public.php';
 
-		$this->loader = new Plugin_Name_Loader();
+		$this->loader = new Popp_Loader();
 
 	}
 
 	/**
 	 * Define the locale for this plugin for internationalization.
 	 *
-	 * Uses the Plugin_Name_i18n class in order to set the domain and to register the hook
+	 * Uses the Popp_i18n class in order to set the domain and to register the hook
 	 * with WordPress.
 	 *
 	 * @since    1.0.0
@@ -134,10 +134,53 @@ class Plugin_Name {
 	 */
 	private function set_locale() {
 
-		$plugin_i18n = new Plugin_Name_i18n();
+		$plugin_i18n = new Popp_i18n();
 
 		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
 
+	}
+
+	/**
+	 * Register post type(s) for plugin
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 */
+	public function register_post_types() {
+			$labels = array(
+				'name'               => _x( 'Pop-ups', 'post type general name', 'popp' ),
+				'singular_name'      => _x( 'Pop-up', 'post type singular name', 'popp' ),
+				'menu_name'          => _x( 'Pop-ups', 'admin menu', 'popp' ),
+				'name_admin_bar'     => _x( 'Pop-up', 'add new on admin bar', 'popp' ),
+				'add_new'            => _x( 'Add New', 'book', 'popp' ),
+				'add_new_item'       => __( 'Add New Pop-up', 'popp' ),
+				'new_item'           => __( 'New Pop-up', 'popp' ),
+				'edit_item'          => __( 'Edit Pop-up', 'popp' ),
+				'view_item'          => __( 'View Pop-up', 'popp' ),
+				'all_items'          => __( 'All Pop-ups', 'popp' ),
+				'search_items'       => __( 'Search Pop-ups', 'popp' ),
+				'parent_item_colon'  => __( 'Parent Pop-ups:', 'popp' ),
+				'not_found'          => __( 'No popups found.', 'popp' ),
+				'not_found_in_trash' => __( 'No popups found in Trash.', 'popp' )
+				);
+
+			$args = array(
+				'labels'             => $labels,
+				'description'        => __( 'Description.', 'popp' ),
+				'public'             => true,
+				'publicly_queryable' => true,
+				'show_ui'            => true,
+				'show_in_menu'       => true,
+				'query_var'          => true,
+				'rewrite'            => array( 'slug' => 'popup' ),
+				'capability_type'    => 'post',
+				'has_archive'        => false,
+				'hierarchical'       => false,
+				'menu_position'      => null,
+				'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments' )
+				);
+
+			register_post_type( 'popup', $args );
 	}
 
 	/**
@@ -149,11 +192,11 @@ class Plugin_Name {
 	 */
 	private function define_admin_hooks() {
 
-		$plugin_admin = new Plugin_Name_Admin( $this->get_plugin_name(), $this->get_version() );
+		$plugin_admin = new Popp_Admin( $this->plugin_name(), $this->get_version() );
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
-
+		$this->loader->add_action( 'init', $this, 'register_post_types' );
 	}
 
 	/**
@@ -165,10 +208,12 @@ class Plugin_Name {
 	 */
 	private function define_public_hooks() {
 
-		$plugin_public = new Plugin_Name_Public( $this->get_plugin_name(), $this->get_version() );
+		$plugin_public = new Popp_Public( $this->plugin_name(), $this->get_version() );
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
+		$this->loader->add_action( 'wp_footer', $plugin_public, 'show_popup' );
+		$this->loader->add_action( 'init', $plugin_public, 'start_session' );
 
 	}
 
@@ -188,7 +233,7 @@ class Plugin_Name {
 	 * @since     1.0.0
 	 * @return    string    The name of the plugin.
 	 */
-	public function get_plugin_name() {
+	public function plugin_name() {
 		return $this->plugin_name;
 	}
 
@@ -196,7 +241,7 @@ class Plugin_Name {
 	 * The reference to the class that orchestrates the hooks with the plugin.
 	 *
 	 * @since     1.0.0
-	 * @return    Plugin_Name_Loader    Orchestrates the hooks of the plugin.
+	 * @return    Popp_Loader    Orchestrates the hooks of the plugin.
 	 */
 	public function get_loader() {
 		return $this->loader;

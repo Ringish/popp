@@ -1,0 +1,27 @@
+html, body {
+  min-height: 100% !important;
+  position: relative; }
+
+.popp-overlay {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.4);
+  height: 100%;
+  width: 100%;
+  z-index: 9999;
+  padding: 10px;
+  top: 0; }
+  .popp-overlay .popp-content {
+    position: relative;
+    top: 2vw;
+    background: #FFF;
+    width: 800px;
+    margin: 0 auto;
+    display: block;
+    box-sizing: border-box;
+    padding: 20px;
+    max-width: 100%; }
+    .popp-overlay .popp-content img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto 20px; }
